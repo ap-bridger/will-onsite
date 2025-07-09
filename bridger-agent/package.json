@@ -17,6 +17,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.11.5",
     "@prisma/client": "^5.22.0",
+    "@tanstack/react-table": "^8.21.3",
     "graphql": "^16.9.0",
     "graphql-yoga": "^5.10.2",
     "next": "15.0.3",
