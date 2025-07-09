@@ -5,7 +5,12 @@ import { DataTable } from "@/components/data-table/DataTable.component";
 import { GreetButton } from "@/components/GreetButton/GreetButton";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ApolloProvider } from "@apollo/client";
-import { Button } from "@chakra-ui/react";
+import { Button, HStack, Spacer } from "@chakra-ui/react";
+import { useState } from "react";
+import {
+  CreateMessageModal,
+  Message,
+} from "@/components/Transactions/CreateMessageModal";
 
 type ClassifiedReviewColumn = {
   date: string;
@@ -23,27 +28,36 @@ const columns = [
     id: "approve",
     header: "Approve",
     cell: (info) => {
-      return <Button variant="solid" onClick={() => {
-        // Handle approve action
-        console.log("Approved:", info.row.original);
-
-      }}> Approve </Button>;
-    }
+      return (
+        <Button
+          variant="solid"
+          onClick={() => {
+            // Handle approve action
+            console.log("Approved:", info.row.original);
+          }}
+        >
+          {" "}
+          Approve{" "}
+        </Button>
+      );
+    },
   }),
   columnHelper.display({
     id: "reject",
     header: "Reject",
     cell: (info) => {
-      return <Button
-        variant="outline"
-        onClick={() => {
-          // Handle reject action
-          console.log("Rejected:", info.row.original);
-        }}
-      >
-        Reject
-      </Button>;
-    }
+      return (
+        <Button
+          variant="outline"
+          onClick={() => {
+            // Handle reject action
+            console.log("Rejected:", info.row.original);
+          }}
+        >
+          Reject
+        </Button>
+      );
+    },
   }),
   columnHelper.accessor("date", {
     header: "Date",
@@ -99,12 +113,33 @@ const data: ClassifiedReviewColumn[] = [
 ];
 
 export default function Home() {
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const addMessage = (message: Message) => {
+    setMessages((prev) => {
+      return [...prev, message];
+    });
+  };
+  console.log("MESSAGES:", messages);
+
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   return (
     <ApolloProvider client={apolloClient}>
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
           <h1>Welcome to the Greeter App</h1>
           <GreetButton />
+          <HStack>
+            <Spacer />
+            <Button onClick={() => setCreateModalOpen(true)}>
+              Create Message
+            </Button>
+            <CreateMessageModal
+              isOpen={createModalOpen}
+              onClose={() => setCreateModalOpen(false)}
+              onCreate={addMessage}
+            />
+          </HStack>
           <DataTable data={data} columns={columns}></DataTable>
         </main>
       </div>
