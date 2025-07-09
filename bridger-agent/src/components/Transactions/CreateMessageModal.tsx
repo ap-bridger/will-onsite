@@ -27,8 +27,14 @@ export const CreateMessageModal = ({
   onCreate,
 }: CreateMessageModalProps) => {
   const [text, setText] = useState("");
+
+  const onCloseWithEffects = () => {
+    setText("");
+    onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onCloseWithEffects}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -45,7 +51,7 @@ export const CreateMessageModal = ({
                   id: v4(),
                   transactionIds: [],
                 });
-                onClose();
+                onCloseWithEffects();
               }}
             >
               Create
